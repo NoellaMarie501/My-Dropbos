@@ -26,7 +26,7 @@ function LoginPage(props) {
   const handleLogin = async () => {
     try {
       try {
-        var { isSignedIn, nextStep } = await signIn({
+        var { isSignedIn, nextStep, signInUserSession } = await signIn({
           username: email,
           password,
         });
