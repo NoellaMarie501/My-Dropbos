@@ -1,8 +1,8 @@
 import { Amplify } from "aws-amplify";
 import { uploadData } from "aws-amplify/storage";
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import amplifyconfig from "../../amplifyconfiguration.json";
 import Layout from "../layout";
@@ -48,12 +48,16 @@ const Home = (props) => {
 
     if (selectedFile) {
       return (
-        <div>
-          <h2>File Details</h2>
-          <p>File Name : {selectedFile.name}</p>
-          <p>File Type : {selectedFile.type}</p>
-          <p>Last Modified : {selectedFile.lastModified}</p>
-        </div>
+        <Container>
+          <Row>
+            <Col>
+              <h2>File Details</h2>
+              <p>File Name: {selectedFile.name}</p>
+              <p>File Type: {selectedFile.type}</p>
+              <p>Last Modified: {selectedFile.lastModified}</p>
+            </Col>
+          </Row>
+        </Container>
       );
     } else if (fileUploadedSuccessfully) {
       return (
