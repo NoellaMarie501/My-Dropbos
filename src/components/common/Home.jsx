@@ -1,51 +1,66 @@
 import { Amplify } from "aws-amplify";
 import { uploadData } from "aws-amplify/storage";
-// import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
-import { Button, Container, Row, Col } from "react-bootstrap";
+import { Button, Container, Row, Col, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import amplifyconfig from "../../amplifyconfiguration.json";
 import Layout from "../layout";
+import './Home.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { Toast } from 'react-bootstrap';
 
 Amplify.configure(amplifyconfig);
 
 const Home = (props) => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [fileUploadedSuccessfully, setFileUploadedSuccessfully] =
-    useState(false);
+  const [folderPath, setFolderPath] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const [uploadMessage, setUploadMessage] = useState('');
 
-  // file change method
   const onFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
   };
 
-  // file upload method
+  const onDragOver = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const onDrop = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const files = event.dataTransfer.files;
+    if (files.length) {
+      setSelectedFile(files[0]);
+    }
+  };
+
   const onFileUpload = async () => {
-    const formData = new FormData();
-    formData.append("Upload File", selectedFile, selectedFile.name);
+    if (!selectedFile) return;
+
+    const key = folderPath ? `${folderPath}/${selectedFile.name}` : selectedFile.name;
 
     try {
-      const result = await uploadData({
-        key: selectedFile.name,
+      await uploadData({
+        key: key,
         data: selectedFile,
         options: {
           accessLevel: "guest",
         },
-      }).result;
+      });
 
-      console.log("Succeeded: ", result);
+      setSelectedFile(null);
+      setFolderPath('');
+      setUploadMessage('Your file has been successfully uploaded!');
+      setShowToast(true);
     } catch (error) {
-      console.log("Error : ", error);
+      setUploadMessage(`Error: ${error.message}`);
+      setShowToast(true);
     }
-
-    setSelectedFile(null);
-    setFileUploadedSuccessfully(true);
   };
 
-  // function to display the file data
   const fileData = () => {
-    console.log("file selected", selectedFile);
-
     if (selectedFile) {
       return (
         <Container>
@@ -54,43 +69,65 @@ const Home = (props) => {
               <h2>File Details</h2>
               <p>File Name: {selectedFile.name}</p>
               <p>File Type: {selectedFile.type}</p>
-              <p>Last Modified: {selectedFile.lastModified}</p>
+              <p>Last Modified: {new Date(selectedFile.lastModified).toLocaleDateString()}</p>
             </Col>
           </Row>
         </Container>
-      );
-    } else if (fileUploadedSuccessfully) {
-      return (
-        <div>
-          <br />
-          <h4>Your File has successfully been Uploaded</h4>
-        </div>
       );
     } else {
       return (
         <div>
           <br />
-          <h4>Choose a file and then press "upload"</h4>
+          <h4>Please choose a file and then press "upload"</h4>
         </div>
       );
     }
   };
+
   return (
     <Layout>
-      <div className="container">
-        <h2>Noella File UPload System</h2>
-        <h3>File UPload Wth Reactjs And Serverless API</h3>
-        <div>
-          <input type="file" onChange={onFileChange} />
-          <button onClick={onFileUpload}>upload</button>
+      <div className="upload-container">
+        <h2>Noella File Upload System</h2>
+        <div 
+          className="drop-area" 
+          onDragOver={onDragOver} 
+          onDrop={onDrop}
+          onClick={() => document.querySelector('input[type="file"]').click()}
+        >
+          <p>Drag & drop files here or click to upload</p>
         </div>
+        <input type="file" onChange={onFileChange} style={{ display: 'none' }} />
+        
+        <Form.Group controlId="folderPath">
+          <Form.Label>Folder Path (Optional)</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter folder path (e.g., folder/subfolder)"
+            value={folderPath}
+            onChange={(e) => setFolderPath(e.target.value)}
+          />
+        </Form.Group>
+
+        <Button onClick={onFileUpload} variant="primary" className="mt-2">Upload</Button>
+        
         {fileData()}
-        OR
-        <h1>
+
+        <div className="view-files-section">
+          <h3>OR</h3>
           <Link to="/files">
-            <Button variant="primary">View Files</Button>
+            <Button variant="primary" size="lg"><FontAwesomeIcon icon={faArrowLeft} /> View Files</Button>
           </Link>
-        </h1>
+        </div>
+
+        <Toast 
+          onClose={() => setShowToast(false)} 
+          show={showToast} 
+          delay={3000} 
+          autohide 
+          className="upload-toast"
+        >
+          <Toast.Body>{uploadMessage}</Toast.Body>
+        </Toast>
       </div>
     </Layout>
   );

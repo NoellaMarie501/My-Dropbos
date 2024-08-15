@@ -1,0 +1,50 @@
+.upload-container {
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    color: black;
+  }
+  
+  .drop-area {
+    border: 2px dashed black;
+    border-radius: 10px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .drop-area:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  button {
+    margin-top: 15px;
+  }
+  button .svg-inline--fa {
+    margin-right: 5px; /* Adjust the spacing between the icon and text */
+  }
+  .view-files-section {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+
+  .radio {
+    margin-right: 20px; /* Adjust the spacing as needed */
+  }
+
+  .upload-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+  }
+  
+  h2, h3, h4 {
+    margin: 20px 0;
+  }
