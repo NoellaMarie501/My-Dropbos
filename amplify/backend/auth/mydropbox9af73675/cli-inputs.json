@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "mydropboxa621ece1_identitypool_a621ece1",
-    "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "mydropa621ece1",
-    "userPoolName": "mydropboxa621ece1_userpool_a621ece1",
+    "identityPoolName": "mydropbox9af73675_identitypool_9af73675",
+    "allowUnauthenticatedIdentities": true,
+    "resourceNameTruncated": "mydrop9af73675",
+    "userPoolName": "mydropbox9af73675_userpool_9af73675",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -31,10 +31,10 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "mydropa621ece1_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "mydrop9af73675_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "a621ece1",
-    "resourceName": "mydropboxa621ece1",
+    "sharedId": "9af73675",
+    "resourceName": "mydropbox9af73675",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "default",
     "usernameAttributes": [
@@ -43,6 +43,20 @@
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "useEnabledMfas": true
+    "useEnabledMfas": true,
+    "authRoleArn": {
+      "Fn::GetAtt": [
+        "AuthRole",
+        "Arn"
+      ]
+    },
+    "unauthRoleArn": {
+      "Fn::GetAtt": [
+        "UnauthRole",
+        "Arn"
+      ]
+    },
+    "breakCircularDependency": true,
+    "dependsOn": []
   }
 }

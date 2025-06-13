@@ -1,68 +1,100 @@
 import { signIn } from "aws-amplify/auth";
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
 import { Link, useNavigate } from "react-router-dom";
-import Layout from "../layout";
 
 function LoginPage(props) {
-  // State to hold the email and password values
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem("isSignedIn") || false);
   const navigate = useNavigate();
-  // Function to handle form submission
+  const [errorMsg, setErrorMsg] = useState("");
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Do something with email and password, e.g., login logic
-    console.log("Email:", email);
-    console.log("Password:", password);
+    setErrorMsg(""); // Clear previous error messages
     handleLogin();
   };
 
   const handleLogin = async () => {
     try {
-      try {
-        var { isSignedIn, nextStep, signInUserSession } = await signIn({
-          username: email,
-          password,
-        });
-        localStorage.setItem('isSignedIn', isSignedIn);
-        props?.setIsAuthenticated(true);
-        console.log("issigned in:", isSignedIn);
-      } catch (error) {
-        console.log("error signing in", error);
-      }
-      // Redirect to /files after loginconsole.log("Email:", email);
+      const { isSignedIn } = await signIn({ username: email, password });
+      localStorage.setItem('isSignedIn', isSignedIn);
+      props?.setIsAuthenticated(true);
       if (isSignedIn) {
-        console.log("Email:", email);
-        console.log("Password:", password);
         navigate("/files");
       }
     } catch (error) {
-      console.error("Error signing in:", error);
-      // Handle login error, show message to the user
+
+      setErrorMsg(error.message || "An error occurred during login.");
+      console.log("error signing in", error);
     }
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-     navigate("/files")
-  }
-  },[isAuthenticated])
+      navigate("/files");
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
-    <Container>
-      <Row className="px-4 my-5">
-        <Col>
-          <h1>Login</h1>
-        </Col>
-      </Row>
-      <Row className="px-4 my-5">
-        <Col sm={6}>
+    <Container className="d-flex justify-content-center align-items-center min-vh-100">
+      <div
+        style={{
+          display: "flex",
+          maxWidth: "900px",
+          width: "100%",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          borderRadius: "1rem",
+          overflow: "hidden",
+        }}
+      >
+        {/* Left Side - Welcome Text */}
+        <div
+          style={{
+            flex: 1,
+            backgroundColor: "#007bff",
+            color: "white",
+            padding: "3rem",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            borderTopLeftRadius: "1rem",
+            borderBottomLeftRadius: "1rem",
+            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+          }}
+        >
+          <h2>Welcome back to 📁 MyDropBox</h2>
+          <p>
+            Your secure place to upload, manage, and share files easily.
+          </p>
+          <p>
+            Please sign in to continue, or create an account if you don't have one.
+          </p>
+        </div>
+
+        {/* Vertical Divider */}
+        <div
+          style={{
+            width: "1px",
+            backgroundColor: "#ddd",
+          }}
+        />
+
+        {/* Right Side - Login Form */}
+        <div
+          style={{
+            flex: 1,
+            padding: "3rem",
+            backgroundColor: "white",
+            borderTopRightRadius: "1rem",
+            borderBottomRightRadius: "1rem",
+          }}
+        >
+          <h1 className="mb-4">Login</h1>
+           {errorMsg && <p className="text-danger">{errorMsg}</p>}
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email Address</Form.Label>
@@ -71,31 +103,31 @@ function LoginPage(props) {
                 placeholder="Enter email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
               <Form.Control
                 type="password"
-                minLength="8"
+                minLength={8}
                 placeholder="Enter Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </Form.Group>
-            <Link
-              to={`/register`}
-              style={{ marginBottom: "1rem", marginRight: "1rem" }}
-            >
-              register instead?
-            </Link>
-            <Button variant="primary" type="submit">
+            <div className="mb-3">
+              <Link to="/register" style={{ textDecoration: "underline" }}>
+                Register instead?
+              </Link>
+            </div>
+            <Button variant="primary" type="submit" className="w-100">
               Login &gt;&gt;
             </Button>
-            &nbsp;
           </Form>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </Container>
   );
 }

@@ -1,0 +1,12 @@
+.card {
+  border-radius: 16px;
+  background: #fff;
+}
+
+.card h3 {
+  font-weight: 600;
+}
+
+.toast {
+  z-index: 9999;
+}

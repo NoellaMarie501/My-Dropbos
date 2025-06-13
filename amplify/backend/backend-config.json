@@ -1,24 +1,6 @@
 {
-  "api": {
-    "mydropbox": {
-      "dependsOn": [],
-      "output": {
-        "authConfig": {
-          "additionalAuthenticationProviders": [],
-          "defaultAuthentication": {
-            "apiKeyConfig": {
-              "apiKeyExpirationDays": 7
-            },
-            "authenticationType": "API_KEY"
-          }
-        }
-      },
-      "providerPlugin": "awscloudformation",
-      "service": "AppSync"
-    }
-  },
   "auth": {
-    "mydropboxa621ece1": {
+    "mydropbox9af73675": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -45,9 +27,65 @@
       "service": "Cognito"
     }
   },
+  "function": {
+    "S3Trigger8147ca30": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "mydropfunction": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_S3Trigger8147ca30_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger8147ca30"
+        }
+      ]
+    },
+    "AMPLIFY_function_S3Trigger8147ca30_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger8147ca30"
+        }
+      ]
+    },
+    "AMPLIFY_function_mydropfunction_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mydropfunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_mydropfunction_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mydropfunction"
+        }
+      ]
+    }
+  },
   "storage": {
-    "filestorage": {
-      "dependsOn": [],
+    "s3Store": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn",
+            "LambdaExecutionRole"
+          ],
+          "category": "function",
+          "resourceName": "S3Trigger8147ca30"
+        }
+      ],
       "providerPlugin": "awscloudformation",
       "service": "S3"
     }

@@ -1,32 +1,36 @@
+import React from "react";
+import { Container, Nav, Navbar, Button } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import { useNavigate } from 'react-router-dom';
+const SiteNav = (props) => {
+  const navigate = useNavigate();
 
-function SiteNav(props) {
-    const navigate = useNavigate()
-    const handleLogout = () => {
-        localStorage.removeItem('isSignedIn');
-        props.logOut();
-        navigate("/signin")
-    }    
+  const handleLogout = () => {
+    localStorage.removeItem("isSignedIn");
+    props.logOut();
+    navigate("/signin");
+  };
 
-    return (
-        <header>
-            <Navbar bg="dark" expand="lg" variant="dark">
-                <Container>
-                    <Navbar.Brand><Nav.Link href="/">My DropBox</Nav.Link></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="ms-md-auto">
-                        <Nav.Link onClick={handleLogout}>Logout</Nav.Link> 
-                    </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar>
-        </header>
-    )
-}
+  return (
+    <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
+      <Container>
+        <Navbar.Brand as={Link} to="/" className="fw-bold fs-4">
+          📁 My DropBox
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="main-navbar" />
+        <Navbar.Collapse id="main-navbar" className="justify-content-end">
+          <Nav>
+            <Nav.Link as={Link} to="/" className="me-3">
+              Home
+            </Nav.Link>
+            <Button variant="outline-light" size="sm" onClick={handleLogout}>
+              Logout
+            </Button>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
+};
 
 export default SiteNav;
